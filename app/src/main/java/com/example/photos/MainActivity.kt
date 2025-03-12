@@ -15,7 +15,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.photos.Photos.PhotoAdapter
-import com.example.photos.Photos.StickyHeader
 import com.example.photos.Photos.ViewModel
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +32,7 @@ class MainActivity : ComponentActivity() {
         searchEditText = findViewById(R.id.searchEditText)
         val searchButton = findViewById<Button>(R.id.searchButton)
 
-        // ✅ Pass onClick event to open full-screen activity
+        //  Pass onClick event to open full-screen activity
         adapter = PhotoAdapter { photo ->
             val intent = Intent(this, FullScreenActivity::class.java).apply {
                 putExtra("IMAGE_URL", photo.download_url)
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
             startActivity(intent)
         }
 
-        // ✅ Fix GridLayoutManager
+        // GridLayoutManager
         val layoutManager = GridLayoutManager(this, 4)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -52,9 +51,8 @@ class MainActivity : ComponentActivity() {
 
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(StickyHeader(adapter))
 
-        // ✅ Observe ViewModel data
+        // Observe ViewModel data
         viewModel.photos.observe(this, Observer { photos ->
             adapter.submitList(photos)
         })
@@ -67,7 +65,7 @@ class MainActivity : ComponentActivity() {
             adapter.submitList(photos)
         })
 
-        // ✅ Initial Data Load
+        // Initial Data Load
         viewModel.fetchPhotos()
 
         searchEditText.addTextChangedListener(object : TextWatcher {
@@ -80,7 +78,7 @@ class MainActivity : ComponentActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        // ✅ Fix RecyclerView Scroll Listener for Lazy Loading
+        // Fix RecyclerView Scroll Listener for Lazy Loading
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -89,7 +87,7 @@ class MainActivity : ComponentActivity() {
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
 
-                // ✅ Load more items only if not already loading and near the end
+                // Load more items only if not already loading and near the end
                 if (!viewModel.isLoading.value!! && lastVisibleItemPosition >= totalItemCount - 6) {
                     viewModel.fetchPhotos()
                 }

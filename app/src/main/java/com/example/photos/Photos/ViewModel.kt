@@ -71,26 +71,16 @@ class ViewModel (application: Application) : AndroidViewModel(application) {
     fun searchPhotos(query: String) {
         val originalPhotos = _photos.value.orEmpty()
 
-        if (query.isEmpty()) {
-            _filteredPhotos.postValue(originalPhotos) // Restore original list on empty search
-            return
-        }
-
-        val filteredList = mutableListOf<Any>()
-        var lastHeader: String? = null
-
-        for (item in originalPhotos) {
-            if (item is String) { // Album header
-                lastHeader = item
-            } else if (item is Photo && (item.id.contains(query, true) || item.author.contains(query, true))) {
-                if (lastHeader != null && !filteredList.contains(lastHeader)) {
-                    filteredList.add(lastHeader) // Keep album header
-                }
-                filteredList.add(item)
+        val filteredList = if (query.isEmpty()) {
+            originalPhotos
+        } else {
+            originalPhotos.filter {
+                it is Photo && (it.id.contains(query, ignoreCase = true) || it.author.contains(query, ignoreCase = true))
             }
         }
 
-        _filteredPhotos.postValue(filteredList) // Update only filtered data
+        _filteredPhotos.postValue(filteredList.filterIsInstance<Photo>())
+
     }
 
 }

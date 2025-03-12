@@ -23,7 +23,7 @@ class FullScreenActivity : AppCompatActivity() {
         textView.text = author
 
         imageView.setOnClickListener {
-            finish() // Close activity on click
+            finish()
         }
     }
 }

@@ -31,7 +31,7 @@ class PhotoAdapter(private val onClick: (Photo) -> Unit) : RecyclerView.Adapter<
         return when (viewType) {
             TYPE_PHOTO -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_photo, parent, false)
-                PhotoViewHolder(view, onClick)  // ✅ Fixed: Pass onClick properly
+                PhotoViewHolder(view, onClick)
             }
             TYPE_HEADER -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_header, parent, false)
@@ -58,7 +58,6 @@ class PhotoAdapter(private val onClick: (Photo) -> Unit) : RecyclerView.Adapter<
             textViewAuthor.text = photo.author
             imageView.load(photo.download_url)
 
-            // ✅ Fixed: Properly setting click listener
             itemView.setOnClickListener {
                 onClick(photo)
             }
